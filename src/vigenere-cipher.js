@@ -20,13 +20,84 @@ const { NotImplementedError } = require('../extensions/index.js');
  * 
  */
 class VigenereCipheringMachine {
-  encrypt() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  constructor (direct = true) {
+    this.direct = direct
   }
-  decrypt() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  encrypt(massage, key) {
+    if (!massage || !key) {
+      throw new Error ("Incorrect arguments!")
+    }
+    massage = massage.toLowerCase().split("")
+    key = key.toLowerCase()
+    let newKey = []
+    for (let i =0, j=0; massage.length > newKey.length; i++, j++) {
+      if (massage[j] === " ") {
+        newKey.push(massage[j])
+        i--
+      }
+      else {
+        if (i >= key.length) {
+          i=0
+        }
+        newKey.push(key[i])
+      }
+    }
+    for (let i=0; i<massage.length; i++) {
+      let currentLetter = massage[i].charCodeAt(0)
+      let keyShift = newKey[i].charCodeAt(0)-97
+      if (currentLetter>=97 && currentLetter<=122) {
+        if (currentLetter + keyShift > 122) {
+          massage[i] = String.fromCharCode(currentLetter + keyShift - 26)
+        }
+        else {
+          massage[i] = String.fromCharCode(currentLetter + keyShift)
+        }
+      }
+    }
+    if (this.direct) {
+      return massage.join("").toUpperCase()
+    }
+    else {
+      return massage.reverse().join("").toUpperCase()
+    }
+  }
+  decrypt(massage, key) {
+    if (!massage || !key) {
+      throw new Error ("Incorrect arguments!")
+    }
+    massage = massage.toLowerCase().split("")
+    key = key.toLowerCase()
+    let newKey = []
+    for (let i =0, j=0; massage.length > newKey.length; i++, j++) {
+      if (massage[j] === " ") {
+        newKey.push(massage[j])
+        i--
+      }
+      else {
+        if (i >= key.length) {
+          i=0
+        }
+        newKey.push(key[i])
+      }
+    }
+    for (let i=0; i<massage.length; i++) {
+      let currentLetter = massage[i].charCodeAt(0)
+      let keyShift = newKey[i].charCodeAt(0)-97
+      if (currentLetter>=97 && currentLetter<=122) {
+        if (currentLetter - keyShift < 97) {
+          massage[i] = String.fromCharCode(currentLetter - keyShift + 26)
+        }
+        else {
+          massage[i] = String.fromCharCode(currentLetter - keyShift)
+        }
+      }
+    }
+    if (this.direct) {
+      return massage.join("").toUpperCase()
+    }
+    else {
+      return massage.reverse().join("").toUpperCase()
+    }
   }
 }
 
